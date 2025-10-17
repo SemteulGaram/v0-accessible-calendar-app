@@ -9,9 +9,51 @@ import type { CalendarEvent } from "@/types/calendar"
 
 export default function Home() {
   const [viewMode, setViewMode] = useState("month")
-  const [events, setEvents] = useState<CalendarEvent[]>([
-  
-  ])
+  const isDev = process.env.NODE_ENV === 'development';
+  const [events, setEvents] = useState<CalendarEvent[]>(isDev ? [
+    {
+      id: "1",
+      title: "팀 미팅",
+      startDate: new Date(),
+      endDate: new Date(new Date().getTime() + 60 * 60 * 1000),
+      description: "매주 월요일 오전 10시 팀 미팅",
+    },
+    {
+      id: "2",
+      title: "팀 미팅2",
+      startDate: new Date(),
+      endDate: new Date(new Date().getTime() + 60 * 60 * 1000),
+      description: "매주 월요일 오전 10시 팀 미팅",
+    },
+    {
+      id: "3",
+      title: "팀 미팅3",
+      startDate: new Date(),
+      endDate: new Date(new Date().getTime() + 60 * 60 * 1000),
+      description: "매주 월요일 오전 10시 팀 미팅",
+    },
+    {
+      id: "4",
+      title: "팀 미팅4",
+      startDate: new Date(),
+      endDate: new Date(new Date().getTime() + 60 * 60 * 1000),
+      description: "매주 월요일 오전 10시 팀 미팅",
+    },
+    {
+      id: "5",
+      title: "프로젝트 마감",
+      startDate: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
+      endDate: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
+      description: "프로젝트 최종 마감일",
+    },
+    {
+      id: "6",
+      title: "워크숍",
+      startDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+      endDate: new Date(new Date().getTime() + 10 * 24 * 60 * 60 * 1000),
+      description: "팀 빌딩 워크숍",
+    },
+  ] : [])
 
   const handleAddEvent = useCallback((event: Omit<CalendarEvent, "id">) => {
     const newEvent: CalendarEvent = {
