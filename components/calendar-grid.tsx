@@ -118,7 +118,7 @@ export function CalendarGrid({ events = [] }: CalendarGridProps) {
                           ${isSelected ? "bg-accent" : ""}
                         `}
                         style={{
-                          minHeight: `${120 + maxLayer * 28}px`,
+                          minHeight: "120px",
                         }}
                         role="gridcell"
                         aria-label={`${formatDate(date)}${dayEvents.length > 0 ? `, ${dayEvents.length}개의 일정` : ""}`}

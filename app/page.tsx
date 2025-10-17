@@ -41,17 +41,31 @@ export default function Home() {
     },
     {
       id: "5",
+      title: "팀 미팅5",
+      startDate: new Date(),
+      endDate: new Date(new Date().getTime() + 60 * 60 * 1000),
+      description: "매주 월요일 오전 10시 팀 미팅",
+    },
+    {
+      id: "6",
       title: "프로젝트 마감이 얼마 남지 않았으므로 더 열심히 해야 합니다",
       startDate: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
       endDate: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
       description: "프로젝트 최종 마감일",
     },
     {
-      id: "6",
+      id: "7",
       title: "워크숍",
       startDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
       endDate: new Date(new Date().getTime() + 10 * 24 * 60 * 60 * 1000),
       description: "팀 빌딩 워크숍",
+    },
+    {
+      id: "8",
+      title: "팀 미팅6",
+      startDate: new Date(new Date().getTime() + 8 * 24 * 60 * 60 * 1000),
+      endDate: new Date(new Date().getTime() + 8 * 24 * 60 * 60 * 1000),
+      description: "매주 월요일 오전 10시 팀 미팅",
     },
   ] : [])
 
