@@ -77,10 +77,10 @@ export function CalendarGrid({ events = [] }: CalendarGridProps) {
         </div>
       </div>
 
-      <Card className="flex-1 overflow-auto p">
-        <div className="flex flex-col gap-px bg-border" role="grid" aria-label="월간 캘린더">
+      <Card className="flex-1 overflow-auto p-0">
+        <div className="flex-1 flex flex-col gap-px bg-border" role="grid" aria-label="월간 캘린더">
           {/* 요일 헤더 */}
-          <div className="grid grid-cols-7 gap-px">
+          <div className="flex-none grid grid-cols-7 gap-px">
             {WEEKDAYS.map((day) => (
               <div
                 key={day}
@@ -99,9 +99,9 @@ export function CalendarGrid({ events = [] }: CalendarGridProps) {
             const maxLayer = Math.max(0, ...weekEventLayouts.map((l) => l.layer))
 
             return (
-              <div key={weekIndex} className="relative">
+              <div key={weekIndex} className="flex-1 relative flex flex-row">
                 {/* 날짜 셀 */}
-                <div className="grid grid-cols-7 gap-px">
+                <div className="flex-1 grid grid-cols-7 gap-px">
                   {week.map((date, dayIndex) => {
                     const isCurrentMonth = date.getMonth() === month
                     const isTodayDate = isToday(date)
@@ -113,7 +113,7 @@ export function CalendarGrid({ events = [] }: CalendarGridProps) {
                         key={dayIndex}
                         onClick={() => handleDateClick(date)}
                         className={`
-                          relative bg-card p-2 text-left transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring focus:ring-inset
+                          relative bg-card p-2 flex flex-col items-center justify-start text-left transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring focus:ring-inset
                           ${!isCurrentMonth ? "text-muted-foreground opacity-50" : "text-foreground"}
                           ${isSelected ? "bg-accent" : ""}
                         `}
@@ -122,7 +122,7 @@ export function CalendarGrid({ events = [] }: CalendarGridProps) {
                         }}
                         role="gridcell"
                         aria-label={`${formatDate(date)}${dayEvents.length > 0 ? `, ${dayEvents.length}개의 일정` : ""}`}
-                        aria-selected={isSelected}
+                        aria-selected={isSelected || undefined}
                       >
                         <span
                           className={`
