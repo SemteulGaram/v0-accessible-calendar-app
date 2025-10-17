@@ -149,14 +149,17 @@ export function CalendarGrid({ events = [] }: CalendarGridProps) {
 
                     const isEventStart = eventStartDate >= weekStart
                     const isEventEnd = eventEndDate <= weekEnd
+                    const eventDayCount = Math.ceil(
+                      (Math.min(eventEndDate.getTime(), weekEnd.getTime()) - Math.max(eventStartDate.getTime(), weekStart.getTime())) /
+                        (1000 * 60 * 60 * 24)
+                    ) + 1
 
                     return (
                       <div
                         key={layoutIndex}
-                        className="pointer-events-auto mx-1 cursor-pointer truncate rounded px-2 py-1 text-xs font-medium text-white transition-opacity hover:opacity-80"
+                        className="inline-flex h-6 items-center justify-start mt-[2px] pointer-events-auto mx-1 cursor-pointer truncate rounded px-2 py-1 text-xs font-medium text-white transition-opacity hover:opacity-80"
                         style={{
                           gridColumn: `${layout.startCol + 1} / span ${layout.span}`,
-                          marginTop: `${layout.layer * 28}px`,
                           backgroundColor: layout.event.color || "#3b82f6",
                           borderTopLeftRadius: isEventStart ? "0.25rem" : "0",
                           borderBottomLeftRadius: isEventStart ? "0.25rem" : "0",
@@ -168,7 +171,7 @@ export function CalendarGrid({ events = [] }: CalendarGridProps) {
                         tabIndex={0}
                         aria-label={`일정: ${layout.event.title}, ${formatDate(eventStartDate)}부터 ${formatDate(eventEndDate)}까지`}
                       >
-                        {isEventStart ? layout.event.title : ""}
+                        {isEventStart ? layout.event.title : layout.event.title + ` (${eventDayCount}일째)`}
                       </div>
                     )
                   })}

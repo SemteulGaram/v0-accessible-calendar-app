@@ -41,7 +41,7 @@ export default function Home() {
     },
     {
       id: "5",
-      title: "프로젝트 마감",
+      title: "프로젝트 마감이 얼마 남지 않았으므로 더 열심히 해야 합니다",
       startDate: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
       endDate: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
       description: "프로젝트 최종 마감일",
