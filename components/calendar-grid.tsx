@@ -143,12 +143,15 @@ export function CalendarGrid({ events = [] }: CalendarGridProps) {
                 <div className="pointer-events-none absolute left-0 right-0 top-8 grid grid-cols-7 gap-px">
                   {weekEventLayouts.map((layout, layoutIndex) => {
                     const eventStartDate = new Date(layout.event.startDate)
+                    const eventStartDateWithoutTime = new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate())
                     const eventEndDate = new Date(layout.event.endDate)
+                    const eventEndDateWithoutTime = new Date(eventEndDate.getFullYear(), eventEndDate.getMonth(), eventEndDate.getDate())
+
                     const weekStart = week[0]
                     const weekEnd = week[week.length - 1]
 
-                    const isEventStart = eventStartDate >= weekStart
-                    const isEventEnd = eventEndDate <= weekEnd
+                    const isEventStart = eventStartDateWithoutTime >= weekStart
+                    const isEventEnd = eventEndDateWithoutTime <= weekEnd
                     const eventDayCount = Math.ceil(
                       (Math.min(eventEndDate.getTime(), weekEnd.getTime()) - Math.max(eventStartDate.getTime(), weekStart.getTime())) /
                         (1000 * 60 * 60 * 24)
