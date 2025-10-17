@@ -73,6 +73,10 @@ export function useTextToSpeech(): UseTextToSpeechReturn {
       }
 
       utterance.onerror = (event) => {
+        if (typeof event === "object" && event.error === 'interrupted') {
+          console.log("[v0] Speech interrupted")
+          return
+        }
         setIsSpeaking(false)
         console.error("[v0] Speech error:", event.error)
       }
