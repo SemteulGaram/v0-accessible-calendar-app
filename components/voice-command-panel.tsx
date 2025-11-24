@@ -4,24 +4,65 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Mic, MicOff, Volume2 } from "lucide-react"
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition"
-import { parseVoiceCommand, VOICE_COMMANDS } from "@/lib/voice-commands"
-import { useEffect } from "react"
+import { parseSimpleVoiceCommand, VOICE_COMMANDS } from "@/lib/voice-commands"
+import { classifyIntent } from "@/lib/api-client"
+import { useEffect, useRef, useState } from "react"
 
 interface VoiceCommandPanelProps {
-  onCommand?: (command: string) => void
+  onCommand?: (command: string, transcript: string) => void
 }
 
 export function VoiceCommandPanel({ onCommand }: VoiceCommandPanelProps) {
   const { isListening, transcript, startListening, stopListening, isSupported, error } = useSpeechRecognition()
+  const transcriptTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const [lastProcessedTranscript, setLastProcessedTranscript] = useState("")
 
+  // 디바운싱을 적용한 음성 명령 처리
   useEffect(() => {
-    if (transcript) {
-      const command = parseVoiceCommand(transcript)
-      if (command && onCommand) {
-        onCommand(command)
+    if (transcript && isListening && transcript !== lastProcessedTranscript) {
+      // 기존 타이머 취소
+      if (transcriptTimeoutRef.current) {
+        clearTimeout(transcriptTimeoutRef.current)
+      }
+
+      // 1.5초 대기 후 처리 (사용자가 말을 멈출 때까지 기다림)
+      transcriptTimeoutRef.current = setTimeout(async () => {
+        if (transcript !== lastProcessedTranscript) {
+          // 먼저 패턴 매칭 시도
+          let command = parseSimpleVoiceCommand(transcript)
+
+          // 패턴 매칭 실패 시 AI로 의도 분류
+          if (!command) {
+            console.log('[Voice Command Panel] Pattern matching failed, trying AI classification...')
+            const intentResult = await classifyIntent(transcript)
+            console.log('[Voice Command Panel] AI Classification:', intentResult)
+
+            // AI가 일정 추가 의도로 분류하고 confidence가 0.5 이상이면
+            if (intentResult.intent === 'ADD_EVENT' && intentResult.confidence >= 0.5) {
+              command = 'ADD_EVENT'
+            } else if (intentResult.intent !== 'UNKNOWN' && intentResult.confidence >= 0.7) {
+              // 다른 명령도 높은 확신도면 사용
+              command = intentResult.intent
+            }
+          }
+
+          if (command && onCommand) {
+            onCommand(command, transcript)
+            setLastProcessedTranscript(transcript)
+          } else {
+            console.log('[Voice Command Panel] No command recognized for:', transcript)
+          }
+        }
+      }, 1500)
+    }
+
+    // 클린업: 컴포넌트 언마운트 시 타이머 정리
+    return () => {
+      if (transcriptTimeoutRef.current) {
+        clearTimeout(transcriptTimeoutRef.current)
       }
     }
-  }, [transcript, onCommand])
+  }, [transcript, isListening, lastProcessedTranscript, onCommand])
 
   const toggleListening = () => {
     if (isListening) {

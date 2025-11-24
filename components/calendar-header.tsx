@@ -103,7 +103,7 @@ export function CalendarHeader({ onVoiceCommand, sidebarContent }: CalendarHeade
             onClick={handleVoiceInput}
             aria-label={isListening ? "음성 인식 중지" : "음성 인식 시작"}
             aria-pressed={isListening}
-            className="shrink-0"
+            className="hidden shrink-0 md:flex"
           >
             <Mic className={`h-5 w-5 ${isListening ? "animate-pulse" : ""}`} />
           </Button>

@@ -8,7 +8,12 @@ export const VOICE_COMMANDS: VoiceCommand[] = [
   {
     patterns: [/일정\s*추가/i, /새\s*일정/i, /이벤트\s*추가/i],
     action: "ADD_EVENT",
-    description: "새 일정 추가",
+    description: "새 일정 추가 (AI 대화형)",
+  },
+  {
+    patterns: [/일정\s*수정/i, /일정\s*변경/i, /일정\s*편집/i, /이벤트\s*수정/i],
+    action: "UPDATE_EVENT",
+    description: "일정 수정 (AI 대화형)",
   },
   {
     patterns: [/오늘/i, /투데이/i],
@@ -41,23 +46,42 @@ export const VOICE_COMMANDS: VoiceCommand[] = [
     description: "일간 보기로 전환",
   },
   {
-    patterns: [/검색/i, /찾기/i],
+    patterns: [/검색/i, /찾기/i, /찾아\s*줘/i],
     action: "SEARCH",
-    description: "일정 검색",
+    description: "일정 검색 (AI 자연어 검색)",
+  },
+  {
+    patterns: [/일정\s*요약/i, /오늘\s*일정/i, /이번\s*주\s*일정/i, /앞으로/i, /다가오는\s*일정/i],
+    action: "SUMMARIZE_EVENTS",
+    description: "일정 요약 (AI 지능형 요약)",
   },
 ]
 
-export function parseVoiceCommand(transcript: string): string | null {
+/**
+ * 기본 음성 명령 패턴 매칭 (간단한 명령어용)
+ * AI가 필요 없는 단순 명령어는 패턴 매칭으로 처리합니다.
+ */
+export function parseSimpleVoiceCommand(transcript: string): string | null {
   const normalizedTranscript = transcript.trim().toLowerCase()
 
   for (const command of VOICE_COMMANDS) {
     for (const pattern of command.patterns) {
       if (pattern.test(normalizedTranscript)) {
-        console.log("[v0] Voice command matched:", command.action)
+        console.log("[Voice Command] Pattern matched:", command.action)
         return command.action
       }
     }
   }
 
   return null
+}
+
+/**
+ * 일정 추가 명령인지 확인합니다.
+ */
+export function isAddEventCommand(transcript: string): boolean {
+  const normalizedTranscript = transcript.trim().toLowerCase()
+  const addEventPatterns = [/일정\s*추가/i, /새\s*일정/i, /이벤트\s*추가/i]
+
+  return addEventPatterns.some(pattern => pattern.test(normalizedTranscript))
 }
